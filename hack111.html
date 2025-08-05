@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloodPredict AI - Smart Blood Inventory Forecaster</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+         :root {
+            --primary: #dc143c;
+            --primary-dark: #b22222;
+            --secondary: #2c3e50;
+            --accent: #3498db;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        /* Header Styles */
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        /* Hero Section */
+        
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1576091160551-60ec07899cf4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        /* Features Section */
+        
+        .features {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--secondary);
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            font-size: 1.2rem;
+            color: #6c757d;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .feature-card li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+        
+        .feature-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        /* Architecture Section */
+        
+        .architecture {
+            padding: 5rem 0;
+            background-color: #f8f9fa;
+        }
+        
+        .architecture-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .architecture-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .architecture-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .architecture-card ul {
+            list-style: none;
+        }
+        
+        .architecture-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .architecture-card li:last-child {
+            border-bottom: none;
+        }
+        /* Benefits Section */
+        
+        .benefits {
+            padding: 5rem 0;
+            background-color: white;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .benefit-category {
+            background: linear-gradient(to bottom, var(--light), #e9ecef);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .benefit-category h3 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .benefit-category ul {
+            list-style: none;
+        }
+        
+        .benefit-category li {
+            padding: 8px 0;
+            margin-left: 1.5rem;
+            position: relative;
+        }
+        
+        .benefit-category li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: -1.5rem;
+            font-size: 1.5rem;
+        }
+        /* Implementation Section */
+        
+        .implementation {
+            padding: 5rem 0;
+            background-color: #f8f9fa;
+        }
+        
+        .implementation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .implementation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .implementation-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        /* Dashboard Preview */
+        
+        .dashboard {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--secondary), #1a2530);
+            color: white;
+            text-align: center;
+        }
+        
+        .dashboard-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-top: 2rem;
+            color: var(--dark);
+        }
+        
+        .dashboard-preview img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        /* Footer */
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-section a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+        }
+        /* Responsive Design */
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .mobile-menu {
+                display: block;
+            }
+            nav ul {
+                display: none;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                text-align: center;
+                margin-top: 15px;
+            }
+            nav ul.active {
+                display: flex;
+            }
+            .hero {
+                padding: 3rem 0;
+            }
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            .section-title {
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>BloodPredict AI</h1>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#implementation">Implementation</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="container hero-content">
+            <h2>Smart Blood Inventory Forecaster</h2>
+            <p>Revolutionizing blood bank management with AI-powered demand forecasting and inventory optimization</p>
+            <a href="#features" class="btn btn-primary">Explore Features</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Key Features</h2>
+                <p>BloodPredict AI combines advanced machine learning with healthcare expertise to optimize blood inventory management</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Demand Forecasting</h3>
+                    <ul>
+                        <li>Predictive Analytics using historical data and real-time factors</li>
+                        <li>Multi-component prediction for whole blood, plasma, platelets</li>
+                        <li>Specific blood type forecasting capabilities</li>
+                        <li>Short-term (daily/weekly) and long-term (monthly/quarterly) options</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h3>Smart Inventory Management</h3>
+                    <ul>
+                        <li>Real-time tracking of current stock levels</li>
+                        <li>Advanced expiration monitoring and prioritization</li>
+                        <li>Automated alerts for low stock and predicted shortages</li>
+                        <li>Comprehensive inventory reporting dashboard</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Data Integration</h3>
+                    <ul>
+                        <li>Seamless connection with hospital EMR systems</li>
+                        <li>Integration with surgical schedules and patient data</li>
+                        <li>Analysis of historical usage patterns</li>
+                        <li>Incorporation of external factors (weather, events)</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Optimization Algorithms</h3>
+                    <ul>
+                        <li>AI-driven order quantity recommendations</li>
+                        <li>Storage placement optimization strategies</li>
+                        <li>Departmental distribution planning</li>
+                        <li>Continuous learning from new data patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Architecture -->
+    <section class="architecture" id="architecture">
+        <div class="container">
+            <div class="section-title">
+                <h2>Technical Architecture</h2>
+                <p>Our system is built on a robust foundation of data science and healthcare technology</p>
+            </div>
+            <div class="architecture-content">
+                <div class="architecture-card">
+                    <h3>Data Sources</h3>
+                    <ul>
+                        <li>Patient blood requests and transfusion records</li>
+                        <li>Surgical schedule and procedure types</li>
+                        <li>Emergency department admission rates</li>
+                        <li>Historical inventory data</li>
+                        <li>Weather and public event data</li>
+                        <li>Regional disease outbreak reports</li>
+                    </ul>
+                </div>
+                <div class="architecture-card">
+                    <h3>AI/ML Components</h3>
+                    <ul>
+                        <li>Time Series Forecasting with LSTM models</li>
+                        <li>Classification Models for blood type prediction</li>
+                        <li>Optimization Engine using linear programming</li>
+                        <li>Anomaly detection for unusual demand patterns</li>
+                        <li>Real-time model retraining capabilities</li>
+                        <li>Explainable AI for decision transparency</li>
+                    </ul>
+                </div>
+                <div class="architecture-card">
+                    <h3>Dashboard Features</h3>
+                    <ul>
+                        <li>Interactive inventory visualization</li>
+                        <li>Forecast accuracy metrics display</li>
+                        <li>Trend analysis charts and graphs</li>
+                        <li>Mobile-responsive alert system</li>
+                        <li>Customizable reporting modules</li>
+                        <li>Role-based access control</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="section-title">
+                <h2>Benefits</h2>
+                <p>BloodPredict AI delivers measurable improvements across the entire blood supply chain</p>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-category">
+                    <h3><i class="fas fa-tint"></i> For Blood Banks</h3>
+                    <ul>
+                        <li>Reduced waste through better expiration management</li>
+                        <li>Optimized procurement planning with accurate forecasting</li>
+                        <li>Improved resource allocation efficiency</li>
+                        <li>Enhanced donor scheduling based on predicted demand</li>
+                        <li>Reduced emergency procurement costs</li>
+                    </ul>
+                </div>
+                <div class="benefit-category">
+                    <h3><i class="fas fa-hospital"></i> For Hospitals</h3>
+                    <ul>
+                        <li>Enhanced patient care through adequate supply</li>
+                        <li>Significant cost reduction from optimized ordering</li>
+                        <li>Automated inventory monitoring and alerts</li>
+                        <li>Better preparation for emergency situations</li>
+                        <li>Improved staff productivity and workflow</li>
+                    </ul>
+                </div>
+                <div class="benefit-category">
+                    <h3><i class="fas fa-user-injured"></i> For Patients</h3>
+                    <ul>
+                        <li>Increased availability of needed blood products</li>
+                        <li>Faster access to blood when required</li>
+                        <li>Better matching of blood types for transfusions</li>
+                        <li>Reduced waiting times for critical procedures</li>
+                        <li>Improved safety through better inventory tracking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Implementation Considerations -->
+    <section class="implementation" id="implementation">
+        <div class="container">
+            <div class="section-title">
+                <h2>Implementation Considerations</h2>
+                <p>Successful deployment requires attention to data quality and regulatory compliance</p>
+            </div>
+            <div class="implementation-grid">
+                <div class="implementation-card">
+                    <h3>Data Requirements</h3>
+                    <ul>
+                        <li>Minimum 12-24 months of historical data</li>
+                        <li>Integration with existing hospital IT systems</li>
+                        <li>Regular data quality monitoring protocols</li>
+                        <li>Data normalization and standardization processes</li>
+                        <li>Real-time data synchronization capabilities</li>
+                        <li>Backup and disaster recovery procedures</li>
+                    </ul>
+                </div>
+                <div class="implementation-card">
+                    <h3>Privacy & Compliance</h3>
+                    <ul>
+                        <li>Fully HIPAA-compliant data handling</li>
+                        <li>Secure cloud infrastructure with encryption</li>
+                        <li>Comprehensive audit trails for all predictions</li>
+                        <li>Role-based access control for sensitive data</li>
+                        <li>Regular security assessments and updates</li>
+                        <li>Data anonymization where possible</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="section-title">
+                <h2>Dashboard Preview</h2>
+                <p>Real-time insights at your fingertips</p>
+            </div>
+            <div class="dashboard-preview">
+                <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80" alt="BloodPredict AI Dashboard">
+                <p>Interactive dashboard showing real-time inventory levels, demand forecasts, and optimization recommendations</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>BloodPredict AI</h3>
+                    <p>Smart blood inventory forecasting for modern healthcare facilities</p>
+                    <p>Reducing waste, improving patient care, and optimizing resources through AI</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#architecture">Architecture</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#implementation">Implementation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@bloodpredict.ai</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Healthcare Innovation District, Boston, MA</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 BloodPredict AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('active');
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                // Close mobile menu if open
+                document.querySelector('nav ul').classList.remove('active');
+            });
+        });
+
+        // Simple animation on scroll
+        window.addEventListener('scroll', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+
+                if (cardPosition < screenPosition) {
+                    card.style.opacity = "1";
+                    card.style.transform = "translateY(0)";
+                }
+            });
+        });
+
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.style.opacity = "0";
+                card.style.transform = "translateY(20px)";
+                card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            });
+
+            // Trigger initial animation check
+            window.dispatchEvent(new Event('scroll'));
+        });
+    </script>
+</body>
+
+</html>
